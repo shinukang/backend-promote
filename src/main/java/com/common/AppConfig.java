@@ -1,10 +1,7 @@
 package com.common;
 
 import com.api.board.controller.*;
-import com.api.reply.controller.ReplyController;
-import com.api.reply.controller.ReplyRepository;
-import com.api.reply.controller.ReplyRepositoryImpl;
-import com.api.reply.controller.ReplyService;
+import com.api.reply.controller.*;
 import com.api.user.controller.*;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -24,7 +21,7 @@ public class AppConfig {
     private final UserService userService = new UserService(userRepository);
     private final UserController userController = new UserController(userService);
 
-    private final ReplyRepository replyRepository = new ReplyRepositoryImpl();
+    private final ReplyRepository replyRepository = new ReplyCpRepository(ds);
     private final ReplyService replyService = new ReplyService(replyRepository);
     private final ReplyController replyController = new ReplyController(replyService);
 
