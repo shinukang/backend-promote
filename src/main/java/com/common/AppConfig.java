@@ -1,6 +1,10 @@
 package com.common;
 
 import com.api.board.controller.*;
+import com.api.reply.controller.ReplyController;
+import com.api.reply.controller.ReplyRepository;
+import com.api.reply.controller.ReplyRepositoryImpl;
+import com.api.reply.controller.ReplyService;
 import com.api.user.controller.UserController;
 import com.api.user.controller.UserRepository;
 import com.api.user.controller.UserRepositoryImpl;
@@ -23,6 +27,10 @@ public class AppConfig {
     private final UserService userService = new UserService(userRepository);
     private final UserController userController = new UserController(userService);
 
+    private final ReplyRepository replyRepository = new ReplyRepositoryImpl();
+    private final ReplyService replyService = new ReplyService(replyRepository);
+    private final ReplyController replyController = new ReplyController(replyService);
+
     public AppConfig() {
         ds.setJdbcUrl(System.getenv("DB_URL"));
         ds.setUsername(System.getenv("DB_USERNAME"));
@@ -32,6 +40,7 @@ public class AppConfig {
         controllerMap.put("/board/read", boardController);
         controllerMap.put("/user/signup", userController);
         controllerMap.put("/user/login", userController);
+        controllerMap.put("/reply", replyController);
     }
 
     public Controller getController(String uri) {
