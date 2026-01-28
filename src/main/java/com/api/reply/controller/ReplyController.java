@@ -1,6 +1,8 @@
 package com.api.reply.controller;
 
 import com.api.reply.model.ReplyDto;
+import com.common.BaseResponse;
+import com.utils.JsonParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,9 +20,10 @@ import static com.common.Config.*;
 public class ReplyController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ReplyDto.Request reqDto = ReplyDto.Request.create(req);
+        ReplyDto.Request reqDto = JsonParser.from(req, ReplyDto.Request.class);
         ReplyService replyService = ReplyService.getInstance();
         ReplyDto.Response resDto = replyService.write(reqDto);
-        resp.getWriter().write(resDto.toString());
+        BaseResponse res = BaseResponse.success(resDto);
+        resp.getWriter().write(JsonParser.from(res));
     }
 }

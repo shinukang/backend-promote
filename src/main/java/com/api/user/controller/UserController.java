@@ -1,6 +1,8 @@
 package com.api.user.controller;
 
 import com.api.user.model.UserDto;
+import com.common.BaseResponse;
+import com.utils.JsonParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,14 +15,14 @@ import java.io.IOException;
 public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UserDto.Request reqDto = UserDto.Request.create(req);
+        UserDto.Request reqDto = JsonParser.from(req, UserDto.Request.class);
         UserService userService = UserService.getInstance();
-        String res = "";
+        BaseResponse res = BaseResponse.failure(null);
         if (req.getServletPath().contains("signup")) {
-            res = userService.signup(reqDto).toString();
+            res = BaseResponse.success(userService.signup(reqDto));
         } else if (req.getServletPath().contains("login")) {
-            res = userService.login(reqDto).toString();
+            res = BaseResponse.success(userService.login(reqDto));
         }
-        resp.getWriter().write(res);
+        resp.getWriter().write(JsonParser.from(res));
     }
 }
