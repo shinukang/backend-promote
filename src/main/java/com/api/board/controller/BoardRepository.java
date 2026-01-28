@@ -10,6 +10,18 @@ import static com.common.Config.*;
 
 public class BoardRepository {
 
+    private BoardRepository() {
+
+    }
+
+    private static class SingletonHolder {
+        private static final BoardRepository instance = new BoardRepository();
+    }
+
+    public static BoardRepository getInstance() {
+        return SingletonHolder.instance;
+    }
+
     public BoardDto.WriteResponse write(BoardDto.Request reqDto) {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
