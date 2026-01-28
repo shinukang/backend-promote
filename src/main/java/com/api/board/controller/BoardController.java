@@ -22,7 +22,7 @@ public class BoardController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getServletPath().contains("read")) {
             BoardDto.Request reqDto = BoardDto.Request.create(req);
-            BoardService boardService = new BoardService();
+            BoardService boardService = BoardService.getInstance();
             BoardDto.ReadResponse readRes = boardService.read(reqDto);
             resp.getWriter().write(readRes.toString());
         }
@@ -32,7 +32,7 @@ public class BoardController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getServletPath().contains("write")) {
             BoardDto.Request reqDto = BoardDto.Request.create(req);
-            BoardService boardService = new BoardService();
+            BoardService boardService = BoardService.getInstance();
             BoardDto.WriteResponse writeRes = boardService.write(reqDto);
             resp.getWriter().write(writeRes.toString());
         }

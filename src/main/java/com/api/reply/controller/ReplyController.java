@@ -19,7 +19,7 @@ public class ReplyController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ReplyDto.Request reqDto = ReplyDto.Request.create(req);
-        ReplyService replyService = new ReplyService();
+        ReplyService replyService = ReplyService.getInstance();
         ReplyDto.Response resDto = replyService.write(reqDto);
         resp.getWriter().write(resDto.toString());
     }
