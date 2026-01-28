@@ -5,10 +5,7 @@ import com.api.reply.controller.ReplyController;
 import com.api.reply.controller.ReplyRepository;
 import com.api.reply.controller.ReplyRepositoryImpl;
 import com.api.reply.controller.ReplyService;
-import com.api.user.controller.UserController;
-import com.api.user.controller.UserRepository;
-import com.api.user.controller.UserRepositoryImpl;
-import com.api.user.controller.UserService;
+import com.api.user.controller.*;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.util.HashMap;
@@ -23,7 +20,7 @@ public class AppConfig {
     private final BoardService boardService = new BoardService(boardRepository);
     private final BoardController boardController = new BoardController(boardService);
 
-    private final UserRepository userRepository = new UserRepositoryImpl();
+    private final UserRepository userRepository = new UserCpRepositoryImpl(ds);
     private final UserService userService = new UserService(userRepository);
     private final UserController userController = new UserController(userService);
 
