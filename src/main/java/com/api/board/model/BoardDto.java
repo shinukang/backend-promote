@@ -11,6 +11,10 @@ public class BoardDto {
         private String title;
         private String contents;
 
+        public Request() {
+
+        }
+
         private Request(String idx, String title, String contents) {
             this.idx = idx;
             this.title = title;
@@ -21,12 +25,24 @@ public class BoardDto {
             return idx;
         }
 
+        public void setIdx(String idx) {
+            this.idx = idx;
+        }
+
         public String getTitle() {
             return title;
         }
 
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
         public String getContents() {
             return contents;
+        }
+
+        public void setContents(String contents) {
+            this.contents = contents;
         }
 
         public static Request create(HttpServletRequest req) {
@@ -40,15 +56,20 @@ public class BoardDto {
     public static class WriteResponse {
         private String idx;
 
+        public WriteResponse() {
+
+        }
+
         private WriteResponse(String idx) {
             this.idx = idx;
         }
 
-        @Override
-        public String toString() {
-            return "WriteResponse{" +
-                    "idx='" + idx + '\'' +
-                    '}';
+        public String getIdx() {
+            return idx;
+        }
+
+        public void setIdx(String idx) {
+            this.idx = idx;
         }
 
         public static WriteResponse create(String idx) {
@@ -61,19 +82,38 @@ public class BoardDto {
         private String contents;
         private List<String> replies;
 
+        public ReadResponse() {
+
+        }
+
         private ReadResponse(String title, String contents, List<String> replies) {
             this.title = title;
             this.contents = contents;
             this.replies = replies;
         }
 
-        @Override
-        public String toString() {
-            return "ReadResponse{" +
-                    "title='" + title + '\'' +
-                    ", contents='" + contents + '\'' +
-                    ", replies=" + replies +
-                    '}';
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getContents() {
+            return contents;
+        }
+
+        public void setContents(String contents) {
+            this.contents = contents;
+        }
+
+        public List<String> getReplies() {
+            return replies;
+        }
+
+        public void setReplies(List<String> replies) {
+            this.replies = replies;
         }
 
         public static ReadResponse create(String title, String contents, List<String> replies) {
