@@ -7,6 +7,17 @@ import java.sql.*;
 import static com.common.Config.*;
 
 public class UserRepository {
+    private UserRepository() {
+
+    }
+
+    private static class SingletonHolder {
+        private static final UserRepository instance = new UserRepository();
+    }
+
+    public static UserRepository getInstance() {
+        return SingletonHolder.instance;
+    }
 
     public UserDto.SignupResponse signup(UserDto.Request reqDto) {
         try {
