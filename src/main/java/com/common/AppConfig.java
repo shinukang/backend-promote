@@ -1,6 +1,10 @@
 package com.common;
 
 import com.api.board.controller.*;
+import com.api.user.controller.UserController;
+import com.api.user.controller.UserRepository;
+import com.api.user.controller.UserRepositoryImpl;
+import com.api.user.controller.UserService;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.util.HashMap;
@@ -10,9 +14,14 @@ public class AppConfig {
     private final Map<String, Controller> controllerMap = new HashMap<>();
 
     private final HikariDataSource ds = new HikariDataSource();
+
     private final BoardRepository boardRepository = new BoardCpRepositoryImpl(ds);
     private final BoardService boardService = new BoardService(boardRepository);
     private final BoardController boardController = new BoardController(boardService);
+
+    private final UserRepository userRepository = new UserRepositoryImpl();
+    private final UserService userService = new UserService(userRepository);
+    private final UserController userController = new UserController(userService);
 
     public AppConfig() {
         ds.setJdbcUrl(System.getenv("DB_URL"));
@@ -21,6 +30,8 @@ public class AppConfig {
 
         controllerMap.put("/board/write", boardController);
         controllerMap.put("/board/read", boardController);
+        controllerMap.put("/user/signup", userController);
+        controllerMap.put("/user/login", userController);
     }
 
     public Controller getController(String uri) {
