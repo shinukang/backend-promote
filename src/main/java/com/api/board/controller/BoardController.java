@@ -1,5 +1,6 @@
-package com.api.board;
+package com.api.board.controller;
 
+import com.api.board.model.BoardDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,18 +16,18 @@ import java.sql.ResultSet;
 import static com.common.Config.*;
 
 @WebServlet(urlPatterns = {"/board/write", "/board/read"})
-public class BoardServlet extends HttpServlet {
+public class BoardController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getServletPath().contains("read")) {
-            String idx = req.getParameter("idx");
             try {
                 Class.forName("org.mariadb.jdbc.Driver");
                 try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
                     final String sql = "SELECT * FROM board LEFT JOIN reply ON reply.board_idx=board.idx WHERE board.idx=?";
                     try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                        pStatement.setInt(1, Integer.parseInt(idx));
+                        BoardDto.Request reqDto = BoardDto.Request.create(req);
+                        pStatement.setInt(1, Integer.parseInt(reqDto.getIdx()));
                         ResultSet rs = pStatement.executeQuery();
                         while (rs.next()) {
                             String title = rs.getString("title");
@@ -50,8 +51,9 @@ public class BoardServlet extends HttpServlet {
                 try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
                     final String sql = "INSERT INTO board(title, contents) VALUES (?, ?)";
                     try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                        pStatement.setString(1, req.getParameter("title"));
-                        pStatement.setString(2, req.getParameter("contents"));
+                        BoardDto.Request reqDto = BoardDto.Request.create(req);
+                        pStatement.setString(1, reqDto.getTitle());
+                        pStatement.setString(2, reqDto.getContents());
                         pStatement.executeUpdate();
                         resp.getWriter().write("게시글 작성 완료");
                     }
