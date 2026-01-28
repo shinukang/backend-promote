@@ -1,14 +1,14 @@
 package com.api.user.controller;
 
 import com.api.user.model.UserDto;
-import com.zaxxer.hikari.HikariDataSource;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class UserCpRepositoryImpl implements UserRepository {
-    private final HikariDataSource ds;
+    private final DataSource ds;
 
-    public UserCpRepositoryImpl(HikariDataSource ds) {
+    public UserCpRepositoryImpl(DataSource ds) {
         this.ds = ds;
     }
 
