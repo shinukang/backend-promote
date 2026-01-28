@@ -7,6 +7,18 @@ import java.sql.*;
 import static com.common.Config.*;
 
 public class ReplyRepository {
+    private ReplyRepository() {
+
+    }
+
+    private static class SingletonHolder {
+        private static final ReplyRepository instance = new ReplyRepository();
+    }
+
+    public static ReplyRepository getInstance() {
+        return SingletonHolder.instance;
+    }
+
     public ReplyDto.Response write(ReplyDto.Request reqDto) {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
