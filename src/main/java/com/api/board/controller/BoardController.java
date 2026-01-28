@@ -2,37 +2,29 @@ package com.api.board.controller;
 
 import com.api.board.model.BoardDto;
 import com.common.BaseResponse;
+import com.common.Controller;
 import com.utils.JsonParser;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
+public class BoardController implements Controller {
+    private final BoardService boardService;
 
-@WebServlet(urlPatterns = {"/board/write", "/board/read"})
-public class BoardController extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getServletPath().contains("read")) {
-            BoardDto.Request reqDto = JsonParser.from(req, BoardDto.Request.class);
-            BoardService boardService = BoardService.getInstance();
-            BoardDto.ReadResponse readRes = boardService.read(reqDto);
-            BaseResponse res = BaseResponse.success(readRes);
-            resp.getWriter().write(JsonParser.from(res));
-        }
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public BaseResponse process(HttpServletRequest req, HttpServletResponse response) {
+        BoardDto.Request reqDto = JsonParser.from(req, BoardDto.Request.class);
+        Object res;
         if (req.getServletPath().contains("write")) {
-            BoardDto.Request reqDto = JsonParser.from(req, BoardDto.Request.class);
-            BoardService boardService = BoardService.getInstance();
-            BoardDto.WriteResponse writeRes = boardService.write(reqDto);
-            BaseResponse res = BaseResponse.success(writeRes);
-            resp.getWriter().write(JsonParser.from(res));
+            res = boardService.write(reqDto);
+        } else if (req.getServletPath().contains("read")) {
+            res = boardService.read(reqDto);
+        } else {
+            res = null;
         }
+        return res != null ? BaseResponse.success(res) : BaseResponse.failure(null);
     }
 }
