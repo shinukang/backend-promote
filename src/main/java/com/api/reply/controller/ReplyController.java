@@ -18,20 +18,9 @@ import static com.common.Config.*;
 public class ReplyController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Class.forName("org.mariadb.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-                final String sql = "INSERT INTO reply(contents, board_idx) VALUES (?, ?)";
-                try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                    ReplyDto replyDto = ReplyDto.create(req);
-                    pStatement.setString(1, replyDto.getContents());
-                    pStatement.setString(2, replyDto.getBoard_idx());
-                    pStatement.executeUpdate();
-                    resp.getWriter().write("댓글 작성 완료");
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        ReplyDto.Request reqDto = ReplyDto.Request.create(req);
+        ReplyService replyService = new ReplyService();
+        ReplyDto.Response resDto = replyService.write(reqDto);
+        resp.getWriter().write(resDto.toString());
     }
 }
