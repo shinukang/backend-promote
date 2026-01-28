@@ -21,46 +21,20 @@ public class BoardController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getServletPath().contains("read")) {
-            try {
-                Class.forName("org.mariadb.jdbc.Driver");
-                try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-                    final String sql = "SELECT * FROM board LEFT JOIN reply ON reply.board_idx=board.idx WHERE board.idx=?";
-                    try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                        BoardDto.Request reqDto = BoardDto.Request.create(req);
-                        pStatement.setInt(1, Integer.parseInt(reqDto.getIdx()));
-                        ResultSet rs = pStatement.executeQuery();
-                        while (rs.next()) {
-                            String title = rs.getString("title");
-                            String contents = rs.getString("board.contents");
-                            String replyContents = rs.getString("reply.contents");
-                            resp.getWriter().write(title + " " + contents + " " + replyContents + "\n");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            BoardDto.Request reqDto = BoardDto.Request.create(req);
+            BoardService boardService = new BoardService();
+            BoardDto.ReadResponse readRes = boardService.read(reqDto);
+            resp.getWriter().write(readRes.toString());
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getServletPath().contains("write")) {
-            try {
-                Class.forName("org.mariadb.jdbc.Driver");
-                try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-                    final String sql = "INSERT INTO board(title, contents) VALUES (?, ?)";
-                    try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                        BoardDto.Request reqDto = BoardDto.Request.create(req);
-                        pStatement.setString(1, reqDto.getTitle());
-                        pStatement.setString(2, reqDto.getContents());
-                        pStatement.executeUpdate();
-                        resp.getWriter().write("게시글 작성 완료");
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            BoardDto.Request reqDto = BoardDto.Request.create(req);
+            BoardService boardService = new BoardService();
+            BoardDto.WriteResponse writeRes = boardService.write(reqDto);
+            resp.getWriter().write(writeRes.toString());
         }
     }
 }
