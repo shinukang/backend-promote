@@ -22,43 +22,14 @@ import static com.common.Config.dbUser;
 public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UserDto userDto = UserDto.create(req);
+        UserDto.Request reqDto = UserDto.Request.create(req);
+        UserService userService = new UserService();
+        String res = "";
         if (req.getServletPath().contains("signup")) {
-            try {
-                Class.forName("org.mariadb.jdbc.Driver");
-                try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-                    final String sql = "INSERT INTO user(email, name, password) VALUES (?, ?, ?)";
-                    try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                        pStatement.setString(1, userDto.getEmail());
-                        pStatement.setString(2, userDto.getName());
-                        pStatement.setString(3, userDto.getPassword());
-                        pStatement.executeUpdate();
-                        resp.getWriter().write("회원가입 완료");
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            res = userService.signup(reqDto).toString();
         } else if (req.getServletPath().contains("login")) {
-            try {
-                Class.forName("org.mariadb.jdbc.Driver");
-                try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-                    final String sql = "SELECT * FROM user WHERE email=? AND password=?";
-                    try (PreparedStatement pStatement = conn.prepareStatement(sql)) {
-                        pStatement.setString(1, userDto.getEmail());
-                        pStatement.setString(2, userDto.getPassword());
-
-                        ResultSet rs = pStatement.executeQuery();
-                        if (rs.next()) {
-                            resp.getWriter().write(rs.getString("name") + " 로그인 성공");
-                        } else {
-                            resp.getWriter().write("로그인 실패");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            res = userService.login(reqDto).toString();
         }
+        resp.getWriter().write(res);
     }
 }
