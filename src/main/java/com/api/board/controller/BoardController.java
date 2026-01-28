@@ -8,10 +8,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class BoardController implements Controller {
+    private final BoardService boardService;
+
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
     @Override
     public BaseResponse process(HttpServletRequest req, HttpServletResponse response) {
         BoardDto.Request reqDto = JsonParser.from(req, BoardDto.Request.class);
-        BoardService boardService = BoardService.getInstance();
         Object res;
         if (req.getServletPath().contains("write")) {
             res = boardService.write(reqDto);
