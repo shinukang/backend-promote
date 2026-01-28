@@ -9,6 +9,10 @@ public class UserDto {
         private String name;
         private String password;
 
+        public Request() {
+
+        }
+
         private Request(String email, String name, String password) {
             this.email = email;
             this.name = name;
@@ -19,12 +23,24 @@ public class UserDto {
             return email;
         }
 
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
         public String getName() {
             return name;
         }
 
+        public void setName(String name) {
+            this.name = name;
+        }
+
         public String getPassword() {
             return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         public static Request create(HttpServletRequest req) {
@@ -38,15 +54,19 @@ public class UserDto {
     public static class SignupResponse {
         private String idx;
 
+        public  SignupResponse() {
+
+        }
         private SignupResponse(String idx) {
             this.idx = idx;
         }
 
-        @Override
-        public String toString() {
-            return "SignupResponse{" +
-                    "idx='" + idx + '\'' +
-                    '}';
+        public String getIdx() {
+            return idx;
+        }
+
+        public void setIdx(String idx) {
+            this.idx = idx;
         }
 
         public static SignupResponse create(String idx) {
@@ -57,15 +77,19 @@ public class UserDto {
     public static class LoginResponse {
         private String name;
 
+        public LoginResponse() {
+
+        }
         private LoginResponse(String name) {
             this.name = name;
         }
 
-        @Override
-        public String toString() {
-            return "LoginResponse{" +
-                    "name='" + name + '\'' +
-                    '}';
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public static LoginResponse create(String name) {
