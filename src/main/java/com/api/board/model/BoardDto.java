@@ -2,6 +2,8 @@ package com.api.board.model;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 public class BoardDto {
 
     public static class Request {
@@ -42,6 +44,13 @@ public class BoardDto {
             this.idx = idx;
         }
 
+        @Override
+        public String toString() {
+            return "WriteResponse{" +
+                    "idx='" + idx + '\'' +
+                    '}';
+        }
+
         public static WriteResponse create(String idx) {
             return new WriteResponse(idx);
         }
@@ -50,14 +59,25 @@ public class BoardDto {
     public static class ReadResponse {
         private String title;
         private String contents;
+        private List<String> replies;
 
-        private ReadResponse(String title, String contents) {
+        private ReadResponse(String title, String contents, List<String> replies) {
             this.title = title;
             this.contents = contents;
+            this.replies = replies;
         }
 
-        public static ReadResponse create(String title, String contents) {
-            return new ReadResponse(title, contents);
+        @Override
+        public String toString() {
+            return "ReadResponse{" +
+                    "title='" + title + '\'' +
+                    ", contents='" + contents + '\'' +
+                    ", replies=" + replies +
+                    '}';
+        }
+
+        public static ReadResponse create(String title, String contents, List<String> replies) {
+            return new ReadResponse(title, contents, replies);
         }
     }
 }
